@@ -1,0 +1,16 @@
+web:
+  build: .
+  links:
+   - db
+   - search
+   - redis
+  ports:
+   - "8000:8000"
+  volumes:
+   - .:/code
+db:
+  image: postgres
+redis:
+  image: redis
+search:
+  image: elasticsearch

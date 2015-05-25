@@ -1,0 +1,80 @@
+{
+  "name": "svfroemern-bassplate",
+  "version": "3.0.0",
+  "description": "svfroemern css for Basscss with cssnext",
+  "author": "Brent Jackson",
+  "license": "MIT",
+  "dependencies": {
+    "basscss-background-images": "latest",
+    "basscss-base-buttons": "latest",
+    "basscss-base-forms": "latest",
+    "basscss-base-reset": "latest",
+    "basscss-base-tables": "latest",
+    "basscss-base-typography": "latest",
+    "basscss-borders": "latest",
+    "basscss-button-blue": "latest",
+    "basscss-button-blue-outline": "latest",
+    "basscss-button-gray": "latest",
+    "basscss-button-light-gray": "latest",
+    "basscss-button-link": "latest",
+    "basscss-button-nav-dark": "latest",
+    "basscss-button-nav-light": "latest",
+    "basscss-button-nav-tab": "latest",
+    "basscss-button-outline": "latest",
+    "basscss-button-red": "latest",
+    "basscss-button-sizes": "latest",
+    "basscss-button-transparent": "latest",
+    "basscss-color-base": "latest",
+    "basscss-color-buttons": "latest",
+    "basscss-color-forms": "latest",
+    "basscss-color-forms-dark": "latest",
+    "basscss-color-tables": "latest",
+    "basscss-colors": "latest",
+    "basscss-defaults": "latest",
+    "basscss-grid": "latest",
+    "basscss-highlight": "latest",
+    "basscss-highlight-dark": "latest",
+    "basscss-input-range": "latest",
+    "basscss-media-object": "latest",
+    "basscss-positions": "latest",
+    "basscss-progress": "latest",
+    "basscss-responsive-states": "latest",
+    "basscss-responsive-white-space": "latest",
+    "basscss-table-object": "latest",
+    "basscss-ui-utility-groups": "latest",
+    "basscss-utility-headings": "latest",
+    "basscss-utility-layout": "latest",
+    "basscss-utility-typography": "latest",
+    "basscss-white-space": "latest",
+    "flex-object": "latest"
+  },
+  "devDependencies": {
+    "cssnext": "^1.1.0",
+    "postcss": "^4.1.4",
+    "http-server": "^0.8.0",
+    "watch": "^0.14.0"
+  },
+  "scripts": {
+    "css": "node css.js",
+    "minify:css": "cssnext  css_src/base.css -c -o css/svfroemern.min.css",
+    "watch:css": "watch 'npm run css && npm run minify:css' ./css_src",
+    "serve": "http-server",
+    "start": "npm run watch:css & npm run serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/basscss/bassplate.git"
+  },
+  "keywords": [
+    "CSS",
+    "OOCSS",
+    "Basscss",
+    "cssnext",
+    "Boilerplate"
+  ],
+  "bugs": {
+    "url": "https://github.com/basscss/bassplate/issues"
+  },
+  "homepage": "https://github.com/basscss/bassplate",
+  "main": "index.js"
+}
