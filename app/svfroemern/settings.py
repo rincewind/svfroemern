@@ -82,19 +82,22 @@ ROOT_URLCONF = 'svfroemern.urls'
 WSGI_APPLICATION = 'svfroemern.wsgi.application'
 
 
+DATABASES = dict(default=dict(ENGINE='django.db.backends.sqlite3', NAME='svfroemern.db'))
+
 # Database
 # https://docs.djangoproject.com/en//ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'HOST': 'db',  # Set to empty string for localhost.
-        'PORT': '',  # Set to empty string for default.
-        'CONN_MAX_AGE': 600,  # number of seconds database connections should persist for
+if False;
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'postgres',
+            'USER': 'postgres',
+            'HOST': 'db',  # Set to empty string for localhost.
+            'PORT': '',  # Set to empty string for default.
+            'CONN_MAX_AGE': 600,  # number of seconds database connections should persist for
+        }
     }
-}
+
 
 
 # Internationalization
@@ -169,6 +172,8 @@ CACHES = {
     }
 }
 
+CACHES = {}
+
 
 # Wagtail settings
 
@@ -180,13 +185,14 @@ WAGTAIL_SITE_NAME = "svfroemern"
 WAGTAILIMAGES_IMAGE_MODEL = "home.BetterImage"
 
 # Use Elasticsearch as the search backend for extra performance and better search results
-WAGTAILSEARCH_BACKENDS = {
-    'default': {
-        'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch.ElasticSearch',
-        'INDEX': 'svfroemern',
-        'URLS': ['http://search:9200']
-    },
-}
+if False:
+    WAGTAILSEARCH_BACKENDS = {
+        'default': {
+            'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch.ElasticSearch',
+            'INDEX': 'svfroemern',
+            'URLS': ['http://search:9200']
+        },
+    }
 
 # Celery settings
 # When you have multiple sites using the same Redis server,
