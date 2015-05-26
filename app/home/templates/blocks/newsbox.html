@@ -1,0 +1,32 @@
+{% load home_tags %}
+{% load wagtailimages_tags %}
+
+
+{% news_items self.news_count as items %}
+		<section class="sm-col sm-col-8 mb2 px1">			
+			<h2 class="h2 bg-gray white m0 p1 ghostly">Neues</h2>
+
+
+			{% for item in items %}
+			<article class="p1 bg-white black ghostly">
+				{% if item.image %}
+				{% image item.image max-500x300 class="auto-height p1 md-col md-col-4 wow animate bounceInLeft" %}
+				{% endif %}
+
+				<h3 class="h3 mt0"><a 	{% if item.link %}href="{{item.link}}"{% endif %}>{{item.title}}</a></h3>
+				<p><span class="gray h5">23.04.2051&nbsp;&nbsp;</span> {{item.text}}
+				</p>
+				{% if item.link %}
+				<div class="clearfix">				
+				<a href="{{item.link}}" class="button button button-small bg-silver black right">weiterlesen</a>
+				</div>
+				{% endif %}
+					
+			</article>
+			{% empty %}
+			<article class="p1 bg-white black ghostly"><div class="p3 h3">Gehen Sie bitte weiter! Hier gibt es noch nichts Neues...</div></article>
+			{% endfor %}
+		</section>
+
+
+

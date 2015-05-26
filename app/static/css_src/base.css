@@ -121,6 +121,7 @@ a { color: inherit; }
     background-color: #f2f2f2;
 }
 
+.auto-height { height: auto; }
 
 .spielplan tr:hover td {
 /*    background-color: #ebebeb;*/

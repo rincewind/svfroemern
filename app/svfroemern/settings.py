@@ -7,7 +7,7 @@ https://docs.djangoproject.com/en//topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en//ref/settings/
 """
-
+import os
 from os.path import abspath, basename, dirname, join, normpath
 from sys import path
 
@@ -28,12 +28,31 @@ path.append(DJANGO_ROOT)
 # Do not set SECRET_KEY or LDAP password or any other sensitive data here.
 # Instead, create a local.py file on the server.
 
+
+# can run in sqlite, no redis, no elasticsearch mode
+# FULLSTACK enabled all the other shit
+
+FULLSTACK = not not os.environ.get('SVFROEMERN_FULLSTACK')
+if FULLSTACK:
+    print('running FULLSTACK! Yeah!')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
+
+
+def custom_show_toolbar(request):
+    return True
+#    if request.user.is_superuser:
+#        return True
+#    return False
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,
+}
 
 
 # Application definition
@@ -61,7 +80,7 @@ INSTALLED_APPS = (
     'wagtail.wagtailsearch',
     'wagtail.wagtailredirects',
     'wagtail.wagtailforms',
-
+    'debug_toolbar',
     'utils',
     'home',
 )
@@ -86,7 +105,7 @@ DATABASES = dict(default=dict(ENGINE='django.db.backends.sqlite3', NAME='svfroem
 
 # Database
 # https://docs.djangoproject.com/en//ref/settings/#databases
-if False;
+if FULLSTACK:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -97,6 +116,8 @@ if False;
             'CONN_MAX_AGE': 600,  # number of seconds database connections should persist for
         }
     }
+
+
 
 
 
@@ -160,19 +181,19 @@ TEMPLATE_DIRS = (
 
 
 # Use Redis as the cache backend for extra performance
-
-CACHES = {
-    'default': {
-        'BACKEND': 'redis_cache.cache.RedisCache',
-        'LOCATION': 'redis://redis/1',
-        'KEY_PREFIX': 'svfroemern',
-        'OPTIONS': {
-            'CLIENT_CLASS': 'redis_cache.client.DefaultClient',
+if FULLSTACK:
+    CACHES = {
+        'default': {
+            'BACKEND': 'redis_cache.cache.RedisCache',
+            'LOCATION': 'redis://redis/1',
+            'KEY_PREFIX': 'svfroemern',
+            'OPTIONS': {
+                'CLIENT_CLASS': 'redis_cache.client.DefaultClient',
+            }
         }
     }
-}
 
-CACHES = {}
+
 
 
 # Wagtail settings
@@ -185,7 +206,7 @@ WAGTAIL_SITE_NAME = "svfroemern"
 WAGTAILIMAGES_IMAGE_MODEL = "home.BetterImage"
 
 # Use Elasticsearch as the search backend for extra performance and better search results
-if False:
+if FULLSTACK:
     WAGTAILSEARCH_BACKENDS = {
         'default': {
             'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch.ElasticSearch',

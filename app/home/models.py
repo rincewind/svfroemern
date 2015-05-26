@@ -1,3 +1,5 @@
+import logging
+
 from django.db import models
 from django.forms import fields
 from django.dispatch.dispatcher import receiver
@@ -31,7 +33,7 @@ class DurationBlock(blocks.FieldBlock):
         self.field = fields.DurationField(required=required, help_text=help_text)
         super().__init__(**kwargs)
 
-    
+
 
 class BetterImage(AbstractImage):
     alt = models.CharField(verbose_name="Alternative", help_text="Wird als Alternative für dieses Bild benutzt, falls Bilder nicht angezeigt werden können (z.B. Screenreader). Sollte den Inhalt des Bildes kurz (1 Satz) beschreiben.", max_length=255, blank=True)
@@ -93,11 +95,20 @@ class SidebarMixin(models.Model):
     ]
 
 class ContentMixin(models.Model):
-    content = RichTextField()
+    content = RichTextField(blank=True)
 
     class Meta:
         abstract = True
 
+
+class NewsBoxBlock(blocks.StructBlock):
+    logger = logging.getLogger(__name__)
+    news_count = NumberBlock(label="Wieviele News?",
+                             help_text="Diese Anzahl bestimmt, wieviele News-Einträge die News-Box anzeigt")
+
+    class Meta:
+        template = 'blocks/newsbox.html'
+        icon = 'user'
 
 
 class HomePage(Page):    
@@ -110,8 +121,7 @@ class HomePage(Page):
             ('page', blocks.PageChooserBlock(label="Seite", help_text="Seite, welche promoted werden soll"),),
         ], label="Promos"))),        
         ('text', blocks.RichTextBlock()),
-        ('news', blocks.StructBlock([('news-count', NumberBlock(label="Wieviele News?",
-                                                            help_text="Diese Anzahl bestimmt, wieviele News-Einträge die News-Box anzeigt")),], label="News-Box")),
+        ('news', NewsBoxBlock(label="News-Box")),
         ],blank=True)
 
 class Game(models.Model):
@@ -166,7 +176,8 @@ class EventPage(Page, SidebarMixin, ContentMixin):
         
 class NewsItemPage(Page, SidebarMixin, ContentMixin):
     teaser_text = models.TextField()
-
+    image = models.ForeignKey(BetterImage, on_delete=models.SET_NULL, related_name='+', blank=True, null=True, help_text='Bild zur Neuigkeit (sieht immer besser aus, wenn eins dabei ist)')
+    
 
 HomePage.content_panels = [
     FieldPanel('title', classname='full title'),
@@ -176,6 +187,7 @@ HomePage.content_panels = [
 NewsItemPage.content_panels = [
     FieldPanel('title', classname='full title'),
     FieldPanel('teaser_text', classname='full'),
+    ImageChooserPanel('image',),
     FieldPanel('content', classname="full"),
 ]
 
