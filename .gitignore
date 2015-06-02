@@ -2,7 +2,7 @@
 .DS_Store
 *.swp
 /.venv/
-/static/
+/static_root/
 /media/
 /.vagrant/
 /Vagrantfile.local
