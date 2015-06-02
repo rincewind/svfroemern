@@ -1,13 +1,16 @@
 web:
   build: .
   links:
-   - db
-   - search
+   - db:postgres
+   - search:elasticsearch
    - redis
   ports:
    - "8000:8000"
   volumes:
    - .:/code
+  environment:
+   - DATABASE_NAME=postgres
+   - DATABASE_PASSWORD=
 db:
   image: postgres
 redis:

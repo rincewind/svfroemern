@@ -183,7 +183,7 @@ class NewsBoxBlock(blocks.StructBlock):
         icon = 'user'
 
 class ContentPage(Page, SidebarMixin, ContentMixin):
-    in_footer = models.ChoiceField(choices=[('right', 'rechts',), ('left', 'links'), ('nope', 'nicht im Footer')], default='nope',
+    in_footer = models.CharField(max_length=20, choices=[('right', 'rechts',), ('left', 'links'), ('nope', 'nicht im Footer')], default='nope',
                                    verbose_name="Im Fuß anzeigen?", help_text="Soll diese Seite im Fuß-Bereich angezeigt werden?")
     class Meta:
         verbose_name = "Einfache Seite"
@@ -325,8 +325,9 @@ HomePage.content_panels = [
     StreamFieldPanel('main'),
 ]
 
-Basi .content_panels = [
+ContentPage.content_panels = [
     FieldPanel('title', classname='full title'),
+    FieldPanel('in_footer',),
     FieldPanel('content', classname="full"),
 ]
 

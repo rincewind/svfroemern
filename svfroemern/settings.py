@@ -30,20 +30,60 @@ path.append(DJANGO_ROOT)
 
 
 # can run in sqlite, no redis, no elasticsearch mode
-# FULLSTACK enabled all the other shit
 
-FULLSTACK = not not os.environ.get('SVFROEMERN_FULLSTACK')
-if FULLSTACK:
-    print('running FULLSTACK! Yeah!')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = not not os.environ.get('DJANGO_DEBUG', False)
+TEMPLATE_DEBUG = DEBUG
+if DEBUG:
+    TEMPLATE_STRING_IF_INVALID = "!! FIXME: UNKNOWN !!"
 
-TEMPLATE_DEBUG = True
 
-TEMPLATE_STRING_IF_INVALID = "!!! FIXME: kaputt!"
+DOMAIN="sv.froemern.de"
 
-ALLOWED_HOSTS = []
+# we trust our environment
+ALLOWED_HOSTS = ["*",]
+
+if DEBUG and not os.environ.get('DJANGO_REAL_EMAIL'):
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+DEFAULT_FROM_EMAIL = "SV Frömern Jugend (Webmaster) <webmaster@{}>".format(DOMAIN)
+
+SERVER_EMAIL = "webserver@{}".format(DOMAIN)
+
+ADMINS = (('Peter', 'pq@pqua.de'),)
+
+#: Mailgun api key for using the REST API
+MAILGUN_API_KEY = os.environ.get("MAILGUN_API_KEY")
+
+#: Mailgun SMTP server host
+MAILGUN_SMTP_SERVER = os.environ.get("MAILGUN_SMTP_SERVER")
+
+#: Mailgun SMTP server login
+MAILGUN_SMTP_LOGIN = os.environ.get("MAILGUN_SMTP_LOGIN")
+
+#: Mailgun SMTP server password
+MAILGUN_SMTP_PASSWORD = os.environ.get("MAILGUN_SMTP_PASSWORD")
+
+#: Mailgun SMTP server port
+MAILGUN_SMTP_PORT = int(os.environ.get("MAILGUN_SMTP_PORT", 0)) or None
+
+if MAILGUN_SMTP_SERVER:
+
+    #: Email host for sending mail
+    EMAIL_HOST = MAILGUN_SMTP_SERVER
+
+    #: Email server username
+    EMAIL_HOST_USER = MAILGUN_SMTP_LOGIN
+
+    #: Email server password
+    EMAIL_HOST_PASSWORD = MAILGUN_SMTP_PASSWORD
+
+    #: Email server SMTP port
+    EMAIL_PORT = MAILGUN_SMTP_PORT
+
+
 
 
 def custom_show_toolbar(request):
@@ -107,17 +147,6 @@ DATABASES = dict(default=dict(ENGINE='django.db.backends.sqlite3', NAME='svfroem
 
 # Database
 # https://docs.djangoproject.com/en//ref/settings/#databases
-if FULLSTACK:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'postgres',
-            'USER': 'postgres',
-            'HOST': 'db',  # Set to empty string for localhost.
-            'PORT': '',  # Set to empty string for default.
-            'CONN_MAX_AGE': 600,  # number of seconds database connections should persist for
-        }
-    }
 
 
 
@@ -139,6 +168,8 @@ FIRST_DAY_OF_WEEK=1
 STATIC_ROOT = join(PROJECT_ROOT, 'static')
 STATIC_URL = '/static/'
 
+
+
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -149,8 +180,79 @@ STATICFILES_DIRS = (
     join(DJANGO_ROOT, 'static'),
 )
 
-MEDIA_ROOT = join(PROJECT_ROOT, 'media')
+if os.path.exists('/Users/peter/'):
+    MEDIA_ROOT = 'media/'
+else:
+    MEDIA_ROOT = '/app/media'
+
 MEDIA_URL = '/media/'
+
+SERVER_URL="sv.froemern.de"
+
+AUTHENTICATION_BACKENDS = ('nopassword.backends.email.EmailBackend', 'django.contrib.auth.backends.ModelBackend')
+
+NOPASSWORD_LOGIN_EMAIL_SUBJECT = 'Dein Login bei {}'.format(SERVER_URL)
+NOPASSWORD_AUTOCOMPLETE = False
+NOPASSWORD_LOGIN_CODE_TIMEOUT = 1800
+
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+if os.environ.get('DATABASE_NAME'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ.get('DATABASE_NAME', 'postgres'),
+            'USER': os.environ.get('DATABASE_NAME', 'postgres'),
+            'PASSWORD': os.environ.get('DATABASE_PASSWORD', ''),
+            'HOST': 'postgres',
+            'PORT': '',  # Set to empty string for default.
+            'CONN_MAX_AGE': 600,  # number of seconds database connections should persist for
+        }
+    }
+
+
+
+if 'REDIS_PORT' in os.environ:
+    CACHES = {
+        'default': {
+            'BACKEND': 'redis_cache.cache.RedisCache',
+            'LOCATION': 'redis://redis:6379',
+            'OPTIONS': {
+                'DB': 1,
+                'CLIENT_CLASS': 'redis_cache.client.DefaultClient',
+            }
+        }
+    }
+
+if 'ELASTICSEARCH_URL' in os.environ:
+    WAGTAILSEARCH_BACKENDS = {
+        'default': {
+            'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch.ElasticSearch',
+            'URLS': [os.environ['ELASTICSEARCH_URL']],
+            'INDEX': 'wagtail',
+            'TIMEOUT': 5,
+        }
+    }
+else:
+    WAGTAILSEARCH_BACKENDS = {
+        'default': {
+            'BACKEND': 'wagtail.wagtailsearch.backends.db.DBSearch',
+        }
+    }
+
+CLOUDFLARE_EMAIL = os.environ.get('CLOUDFLARE_EMAIL')
+CLOUDFLARE_TOKEN = os.environ.get('CLOUDFLARE_TOKEN')
+
+if CLOUDFLARE_EMAIL:
+
+    WAGTAILFRONTENDCACHE = {
+        'cloudflare': {
+            'BACKEND': 'wagtail.contrib.wagtailfrontendcache.backends.CloudflareBackend',
+            'EMAIL': CLOUDFLARE_EMAIL,
+            'TOKEN': CLOUDFLARE_TOKEN,
+        },
+    }
 
 
 # Django compressor settings
@@ -160,6 +262,8 @@ COMPRESS_PRECOMPILERS = (
     ('text/x-scss', 'django_libsass.SassCompiler'),
 )
 
+COMPRESS_OFFLINE=False
+COMPRESS_CSS_HASHING_METHOD = 'hash'
 
 # Taggit 0.12 has moved its south migrations to separate folder
 # http://django-taggit.readthedocs.org/en/latest/
@@ -181,47 +285,27 @@ TEMPLATE_DIRS = (
     normpath(join(DJANGO_ROOT, 'templates')),
 )
 
-
-# Use Redis as the cache backend for extra performance
-if FULLSTACK:
-    CACHES = {
-        'default': {
-            'BACKEND': 'redis_cache.cache.RedisCache',
-            'LOCATION': 'redis://redis/1',
-            'KEY_PREFIX': 'svfroemern',
-            'OPTIONS': {
-                'CLIENT_CLASS': 'redis_cache.client.DefaultClient',
-            }
-        }
-    }
-
-
-
-
 # Wagtail settings
 
-LOGIN_URL = 'wagtailadmin_login'
+LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'wagtailadmin_home'
 
 WAGTAIL_SITE_NAME = "svfroemern"
 
+WAGTAILSEARCH_RESULTS_TEMPLATE = 'home/search_results.html'
+
+# Whether to use face/feature detection to improve image cropping - requires OpenCV
+WAGTAILIMAGES_FEATURE_DETECTION_ENABLED = False
+
+
 WAGTAILIMAGES_IMAGE_MODEL = "home.BetterImage"
 
-# Use Elasticsearch as the search backend for extra performance and better search results
-if FULLSTACK:
-    WAGTAILSEARCH_BACKENDS = {
-        'default': {
-            'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch.ElasticSearch',
-            'INDEX': 'svfroemern',
-            'URLS': ['http://search:9200']
-        },
-    }
 
 # Celery settings
 # When you have multiple sites using the same Redis server,
 # specify a different Redis DB. e.g. redis://localhost/5
 
-BROKER_URL = 'redis://redis/2'
+BROKER_URL = 'redis://redis/5'
 
 CELERY_SEND_TASK_ERROR_EMAILS = True
 CELERYD_LOG_COLOR = False
@@ -229,12 +313,9 @@ CELERYD_LOG_COLOR = False
 DEBUG = True
 TEMPLATE_DEBUG = True
 
-SECRET_KEY = 'NOTASECRET'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'Vicky und die starken Männer')
 
 
-DATABASES['default']['PASSWORD'] = ''
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Process all tasks synchronously.
 # Helpful for local development and running tests
@@ -266,135 +347,20 @@ LOGGING = {
     'loggers': {
         'home': {
             'handlers': ['console'],
-            'level': 'DEBUG',
-        }
-#        'django.request': {
-#            'handlers':     ['mail_admins'],
-#            'level':        'ERROR',
-#            'propagate':    False,
-#        },
-#        'django.security': {
-#            'handlers':     ['mail_admins'],
-#            'level':        'ERROR',
-#            'propagate':    False,
-#        },
+            'level': 'DEBUG' if DEBUG else 'INFO',
+        },
+        'django.request': {
+            'handlers':     ['mail_admins'],
+            'level':        'ERROR',
+            'propagate':    False,
+        },
+        'django.security': {
+            'handlers':     ['mail_admins'],
+            'level':        'ERROR',
+            'propagate':    False,
+        },
     },
 }
-
-
-# Log errors to file
-if False:
-    if 'ERROR_LOG' in env:
-        LOGGING['handlers']['errors_file'] = {
-            'level':        'ERROR',
-            'class':        'logging.handlers.RotatingFileHandler',
-            'filename':     env['ERROR_LOG'],
-            'maxBytes':     5242880, # 5MB
-            'backupCount':  5
-        }
-        LOGGING['loggers']['django.request']['handlers'].append('errors_file')
-        LOGGING['loggers']['django.security']['handlers'].append('errors_file')
-
-
-if False: # production stuff
-
-    # Do not set SECRET_KEY, Postgres or LDAP password or any other sensitive data here.
-    # Instead, create a local.py file on the server.
-
-    # Disable debug mode
-    DEBUG = False
-    TEMPLATE_DEBUG = False
-
-
-    # Compress static files offline and minify CSS
-    # http://django-compressor.readthedocs.org/en/latest/settings/#django.conf.settings.COMPRESS_OFFLINE
-    COMPRESS_OFFLINE = True
-    COMPRESS_CSS_FILTERS = [
-        'compressor.filters.css_default.CssAbsoluteFilter',
-        'compressor.filters.cssmin.CSSMinFilter',
-    ]
-
-
-    # Configuration from environment variables
-    # Alternatively, you can set these in a local.py file on the server
-
-    env = os.environ.copy()
-
-    # On Torchbox servers, many environment variables are prefixed with "CFG_"
-    for key, value in os.environ.items():
-        if key.startswith('CFG_'):
-            env[key[4:]] = value
-
-
-    # Basic configuration
-
-    APP_NAME = env.get('APP_NAME', 'svfroemern')
-
-    if 'SECRET_KEY' in env:
-        SECRET_KEY = env['SECRET_KEY']
-
-    if 'ALLOWED_HOSTS' in env:
-        ALLOWED_HOSTS = env['ALLOWED_HOSTS'].split(',')
-
-    if 'PRIMARY_HOST' in env:
-        BASE_URL = 'http://%s/' % env['PRIMARY_HOST']
-
-    if 'SERVER_EMAIL' in env:
-        SERVER_EMAIL = env['SERVER_EMAIL']
-
-
-    # Database
-
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': env.get('PGDATABASE', APP_NAME),
-            'CONN_MAX_AGE': 600,  # number of seconds database connections should persist for
-
-            # User, host and port can be configured by the PGUSER, PGHOST and
-            # PGPORT environment variables (these get picked up by libpq).
-        }
-    }
-
-
-    # Redis
-    # Redis location can either be passed through with REDIS_HOST or REDIS_SOCKET
-
-    if 'REDIS_HOST' in env:
-        REDIS_LOCATION = env['REDIS_HOST']
-        BROKER_URL = 'redis://%s' % env['REDIS_HOST']
-
-    elif 'REDIS_SOCKET' in env:
-        REDIS_LOCATION = 'unix://%s' % env['REDIS_SOCKET']
-        BROKER_URL = 'redis+socket://%s' % env['REDIS_SOCKET']
-
-    else:
-        REDIS_LOCATION = None
-
-
-    if REDIS_LOCATION is not None:
-        CACHES = {
-            'default': {
-                'BACKEND': 'redis_cache.cache.RedisCache',
-                'LOCATION': REDIS_LOCATION,
-                'KEY_PREFIX': APP_NAME,
-                'OPTIONS': {
-                    'CLIENT_CLASS': 'redis_cache.client.DefaultClient',
-                }
-            }
-        }
-
-
-    # Elasticsearch
-
-    if 'ELASTICSEARCH_URL' in env:
-        WAGTAILSEARCH_BACKENDS = {
-            'default': {
-                'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch.ElasticSearch',
-                'URLS': [env['ELASTICSEARCH_URL']],
-                'INDEX': APP_NAME,
-            },
-        }
 
 
 
