@@ -14,14 +14,14 @@ from sys import path
 PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 
 # Absolute filesystem path to the Django project directory:
-#DJANGO_ROOT = dirname(dirname(abspath(__file__)))
+DJANGO_ROOT = dirname(dirname(abspath(__file__)))
 
 # Absolute filesystem path to the top-level project folder:
-#PROJECT_ROOT = dirname(DJANGO_ROOT)
+PROJECT_ROOT = dirname(DJANGO_ROOT)
 
 # Add our project to our pythonpath, this way we don't need to type our project
 # name in our dotted import paths:
-#path.append(DJANGO_ROOT)
+path.append(DJANGO_ROOT)
 
 
 # Quick-start development settings - unsuitable for production
@@ -167,7 +167,7 @@ FIRST_DAY_OF_WEEK=1
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en//howto/static-files/
 
-STATIC_ROOT = './static_root'
+STATIC_ROOT = join(PROJECT_ROOT, 'static_root')
 STATIC_URL = '/static/'
 
 
@@ -179,7 +179,7 @@ STATICFILES_FINDERS = (
 )
 
 STATICFILES_DIRS = (
-    './static',
+    join(DJANGO_ROOT, 'static'),
 )
 
 if os.path.exists('/Users/peter/'):
@@ -284,7 +284,7 @@ TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
 )
 
 TEMPLATE_DIRS = (
-     os.path.join(PROJECT_PATH, 'templates'),
+    normpath(join(DJANGO_ROOT, 'templates')),
 )
 
 # Wagtail settings
