@@ -219,7 +219,7 @@ if 'REDIS_PORT' in os.environ:
             'BACKEND': 'redis_cache.cache.RedisCache',
             'LOCATION': 'redis://redis:6379',
             'OPTIONS': {
-                'DB': 1,
+                'DB': 13,
                 'CLIENT_CLASS': 'redis_cache.client.DefaultClient',
             }
         }
@@ -305,7 +305,7 @@ WAGTAILIMAGES_IMAGE_MODEL = "home.BetterImage"
 # When you have multiple sites using the same Redis server,
 # specify a different Redis DB. e.g. redis://localhost/5
 
-BROKER_URL = 'redis://redis/5'
+BROKER_URL = 'redis://redis/7'
 
 CELERY_SEND_TASK_ERROR_EMAILS = True
 CELERYD_LOG_COLOR = False
