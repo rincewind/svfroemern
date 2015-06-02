@@ -174,7 +174,7 @@ STATICFILES_FINDERS = (
 )
 
 STATICFILES_DIRS = (
-    join(PROJECT__ROOT, 'static'),
+    join(PROJECT_ROOT, 'static'),
 )
 
 if os.path.exists('/Users/peter/'):
