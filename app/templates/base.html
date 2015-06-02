@@ -13,10 +13,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
         {% compress css %}
-	<!-- link rel="stylesheet" href="bower_components/normalize.css/normalize.css">
-	<link rel="stylesheet" href="bower_components/basscss/css/basscss.css">
-	<link rel="stylesheet" href="bower_components/fontawesome/css/font-awesome.css">
-	<link rel="stylesheet" href="bower_components/animate.css/animate.css" -->
+	<link rel="stylesheet" href="{% static 'bower_components/normalize.css/normalize.css' %}">
+	<link rel="stylesheet" href="{% static 'bower_components/fontawesome/css/font-awesome.css' %}">
+	<link rel="stylesheet" href="{% static 'bower_components/animate.css/animate.css' %}">
 
             <link rel="stylesheet" type="text/css" href="{% static 'css/svfroemern.css' %}">
         {% endcompress %}
@@ -30,11 +29,12 @@
         {% wagtailuserbar %}
 
 
-	<div class="debug absolute top-0">
+	<!-- div class="debug absolute top-0">
 	<span class="sm-show">sm</span>
 	<span class="md-show">md</span>
 	<span class="lg-show">lg</span>
-	</div>
+	</div -->
+
 
 	<header class="clearfix bg-darken-4  bg-left bg-norepeat bg-centery fixed full-width z1 top-0" >
 
@@ -118,8 +118,8 @@
 
 
         {% compress js %}
-        <!-- script type="text/javascript" src="bower_components/zepto/zepto.js"></script>
-	<script src="bower_components/wow.js/dist/wow.js"></script -->
+        <script type="text/javascript" src="{% static 'bower_components/zepto/zepto.js' %}"></script>
+	<script type="text/javascript" src="{% static 'bower_components/wow.js/dist/wow.js' %}"></script>
 
 
             <script type="text/javascript" src="{% static 'js/svfroemern.js' %}"></script>

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% load static home_tags  %}
+{% load wagtailimages_tags %}
+
+{% block body_class %}template-{{ self.get_verbose_name|slugify }}{% endblock %}
+
+{% block main_content %}
+<section class="sm-col sm-col-8 px1">			
+{% block left_content %}
+{% endblock %}
+</section>
+{% endblock %}
+
+
+
+{% block sidebar %}
+		<aside class="sm-col sm-col-4 px1">
+
+
+{% for block in self.effective_sidebar %}
+
+{% if block.block_type == 'events' %}
+{% events block.value.past_cutoff block.value.future_cutoff as items %}
+			<div class="mb1">
+			<h2 class="h2 p1 white bg-gray m0">Termine</h2>
+			<div class="p1 bg-silver black  ghostly">
+			  {% for event in items %}
+				<h3 class="h4 m0">{{event.start|date:"d.m.Y"}}{% if event.end %} -&nbsp;{{event.end|date:"d.m.Y" }}{% endif %}</h3>
+				<p>{{event.title}}</p>
+{% empty %}
+<h2 class="h4 m0 p2">In den nächsten {{block.value.future_cutoff}} Tagen ist nichts geplant!</h2>
+{% endfor %}
+			</div>
+			</div>
+
+
+{% elif block.block_type == 'game_schedule' %}
+{% gameplan as all_games %}
+{% if all_games %}
+			<div class="mb1">
+			<h2 class="h2 p1 white bg-gray m0">Spiele</h2>
+			<div class="p1 bg-silver black  ghostly">
+				<table class="small-table compact-table">
+					<tbody>
+						{% for game in all_games %}
+						{% ifchanged %}
+						<tr>
+							<th colspan="5">{{game.schedule|date:"l, d.m.Y"}}</th>
+						</tr>
+						{% endifchanged %}						
+						<tr><td>{% if game.is_home %}<i class="fa fa-home"></i>{% else %}<i class="fa fa-bus"></i>{% endif %}</td><td>{{game.schedule|date:'H:t'}}&nbsp;Uhr</td><td>{{game.team_home}}</td><td>:</td><td>{{game.team_away}}</td></tr>
+
+						{% endfor %}
+					</tbody>
+
+				</table>
+
+
+			</div>
+			</div>
+{% endif %}
+{% elif block.block_type == 'game_results' %}
+{% gameresults as all_games %}
+{% if all_games %}
+			<div class="mb1">
+			<h2 class="h2 p1 white bg-gray m0">Ergebnisse</h2>
+			<div class="p1 bg-silver black  ghostly">
+				<table class="small-table compact-table">
+					<tbody>
+						{% for game in all_games %}
+						{% ifchanged %}
+						<tr>
+							<th colspan="6">{{game.schedule|date:"l, d.m.Y"}}</th>
+						</tr>
+						{% endifchanged %}
+						<tr><td>{{game.team_home}}</td><td>:</td><td>{{game.team_away}}</td><td>{{game.goals_home}}</td><td>:</td><td>{{game.goals_away}}</td></tr>
+
+						{% endfor %}
+					</tbody>
+
+				</table>
+
+			</div>
+			</div>
+{% endif %}
+{% elif block.block_type == 'contact' %}
+			<div class="mb1">
+			<h2 class="h2 p1 white bg-gray m0">Kontakt</h2>
+			<div class="p1 bg-silver black  ghostly">
+				<div class="p1 fit center">
+					{% image block.value.person_image max-340x230 class="auto-height mx-auto block" %}
+					
+						<strong class="gray">{{block.value.person_role}}</strong><br/><strong>{{block.value.person_name}}</strong><br/>{{block.value.person_line1}}<br/>{{block.value.person_line2}}</div>
+
+
+				</div>
+				
+			</div>
+			</div>
+
+{% endif %}
+
+{% endfor %}
+</aside>
+
+
+{% endblock %}

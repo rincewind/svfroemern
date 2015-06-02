@@ -1,0 +1,11 @@
+ <div class="mb2">
+			<h2 class="h2 bg-gray white m0 p1 ghostly">Spielplan</h2>
+			<table class=" bg-white spielplan fit">
+			  {% for game in self.games.all %}
+				<tr class="">
+					<td class="">{% if game.home %}<i class="fa fa-home"></i>{% else %}<i class="fa fa-bus"></i>{% endif %}</td><td>{{game.schedule|date:"D, d.m.Y H:t"}}&nbsp;Uhr</td><td class="bold">{{game.team_home}}</td><td>{{game.team_away}}</td><td class="bold">{{game.goals_home}}&nbsp;:&nbsp;{{game.goals_away}} {% if game.win %}<i class="green fa fa-smile-o"></i>{% elif game.tied %}{% else %}<i class="red fa fa-frown-o"></i>{% endif %}</td>
+				</tr>
+				{% endfor %}
+			</table>
+</div>
+

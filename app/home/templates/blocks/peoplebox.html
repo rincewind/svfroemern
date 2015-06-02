@@ -1,0 +1,25 @@
+{% load home_tags %}
+{% load wagtailimages_tags %}
+<div class="mb2">
+			<h2 class="h2 bg-gray white m0 p1 ghostly">Kader</h2>
+			<div class="full-width flex flex-wrap bg-white ">
+{% for person in self %}
+				<div class="bg-white sm-col sm-col-6 col col-12">
+					{% if person.person_image %}
+					{% image person.person_image max-150x200 class="p1 col col-4 auto-height" %}
+					{% endif %}
+
+					<div class="col-8 col p1">
+						<strong class="gray">{{person.person_role}}</strong><br/><strong>{{person.person_name}}</strong><br/>{{person.person_line1}}<br/>{{person.person_line2}}</div>
+				</div>
+{% endfor %}
+			</div>
+</div>
+
+
+
+
+
+
+
+

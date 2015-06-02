@@ -1,0 +1,26 @@
+{% extends "home/page_with_sidebar.html" %}
+
+{% load static home_tags %}
+
+
+{% block left_content %}
+
+
+{% for block in self.content %}
+		  {% if block.block_type == 'gameplan' %}
+{% include "home/gameplan.html" %}
+{% else %}
+<div class="mb2">
+		  {% if block.block_type == 'text' %}
+		  <div class="bg-white p1">
+		    {% endif %}
+		  {{ block}}
+		  {% if block.block_type == 'text' %}
+		  </div>
+		    {% endif %}
+{% endif %}
+
+</div>
+{% endfor %}
+
+{% endblock %}

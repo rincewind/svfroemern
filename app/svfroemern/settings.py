@@ -41,6 +41,8 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
+TEMPLATE_STRING_IF_INVALID = "!!! FIXME: kaputt!"
+
 ALLOWED_HOSTS = []
 
 
@@ -80,7 +82,7 @@ INSTALLED_APPS = (
     'wagtail.wagtailsearch',
     'wagtail.wagtailredirects',
     'wagtail.wagtailforms',
-    'debug_toolbar',
+#    'debug_toolbar', # way to slow
     'utils',
     'home',
 )
@@ -240,6 +242,60 @@ CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
 CELERY_ALWAYS_EAGER = True
 
 
+# Logging
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+        },
+        'console':{
+            'level':'DEBUG',
+            'class':'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+    },
+ 'formatters': {
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'loggers': {
+        'home': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        }
+#        'django.request': {
+#            'handlers':     ['mail_admins'],
+#            'level':        'ERROR',
+#            'propagate':    False,
+#        },
+#        'django.security': {
+#            'handlers':     ['mail_admins'],
+#            'level':        'ERROR',
+#            'propagate':    False,
+#        },
+    },
+}
+
+
+# Log errors to file
+if False:
+    if 'ERROR_LOG' in env:
+        LOGGING['handlers']['errors_file'] = {
+            'level':        'ERROR',
+            'class':        'logging.handlers.RotatingFileHandler',
+            'filename':     env['ERROR_LOG'],
+            'maxBytes':     5242880, # 5MB
+            'backupCount':  5
+        }
+        LOGGING['loggers']['django.request']['handlers'].append('errors_file')
+        LOGGING['loggers']['django.security']['handlers'].append('errors_file')
+
+
 if False: # production stuff
 
     # Do not set SECRET_KEY, Postgres or LDAP password or any other sensitive data here.
@@ -341,43 +397,6 @@ if False: # production stuff
         }
 
 
-    # Logging
-
-    LOGGING = {
-        'version': 1,
-        'disable_existing_loggers': False,
-        'handlers': {
-            'mail_admins': {
-                'level': 'ERROR',
-                'class': 'django.utils.log.AdminEmailHandler',
-            },
-        },
-        'loggers': {
-            'django.request': {
-                'handlers':     ['mail_admins'],
-                'level':        'ERROR',
-                'propagate':    False,
-            },
-            'django.security': {
-                'handlers':     ['mail_admins'],
-                'level':        'ERROR',
-                'propagate':    False,
-            },
-        },
-    }
-
-
-    # Log errors to file
-    if 'ERROR_LOG' in env:
-        LOGGING['handlers']['errors_file'] = {
-            'level':        'ERROR',
-            'class':        'logging.handlers.RotatingFileHandler',
-            'filename':     env['ERROR_LOG'],
-            'maxBytes':     5242880, # 5MB
-            'backupCount':  5
-        }
-        LOGGING['loggers']['django.request']['handlers'].append('errors_file')
-        LOGGING['loggers']['django.security']['handlers'].append('errors_file')
 
 
 try:
