@@ -125,7 +125,8 @@ class SidebarMixin(models.Model):
         if self.sidebar_inherit:
             logger.debug('sidebar aquisition in %s', self)
             parent = self.get_parent().specific
-            return parent.effective_sidebar
+            if hasattr(parent, 'effective_sidebar'):
+                return parent.effective_sidebar
 
             # while parent:
             #     logger.debug('self: %s parent: %s %s', self, parent, repr(parent.__class__))
