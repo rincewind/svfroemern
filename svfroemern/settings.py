@@ -11,6 +11,8 @@ import os
 from os.path import abspath, basename, dirname, join, normpath
 from sys import path
 
+PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
+
 # Absolute filesystem path to the Django project directory:
 #DJANGO_ROOT = dirname(dirname(abspath(__file__)))
 
@@ -282,7 +284,7 @@ TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
 )
 
 TEMPLATE_DIRS = (
-     './templates',
+     os.path.join(PROJECT_PATH, 'templates'),
 )
 
 # Wagtail settings

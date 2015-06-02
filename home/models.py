@@ -176,7 +176,7 @@ class NewsBoxBlock(blocks.StructBlock):
     news_count = NumberBlock(label="Wieviele News?",
                              help_text="Diese Zahl bestimmt, wieviele News-Einträge die News-Kiste anzeigt")
 
-    base_page = blocks.PageChooserBlock(label="Zu welcher Seite?", help_text="Es werden nur Meldungen angezeigt, die unterhalb dieser Seite im Seitenbaum hängen.")
+    base_page = blocks.PageChooserBlock(label="Zu welcher Seite?", help_text="Es werden nur Meldungen angezeigt, die unterhalb dieser Seite im Seitenbaum hängen.", blank=True)
 
     class Meta:
         template = 'blocks/newsbox.html'
