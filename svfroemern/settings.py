@@ -14,14 +14,9 @@ from sys import path
 PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 
 # Absolute filesystem path to the Django project directory:
-DJANGO_ROOT = dirname(dirname(abspath(__file__)))
+PROJECT_ROOT = dirname(dirname(abspath(__file__)))
 
-# Absolute filesystem path to the top-level project folder:
-PROJECT_ROOT = dirname(DJANGO_ROOT)
 
-# Add our project to our pythonpath, this way we don't need to type our project
-# name in our dotted import paths:
-path.append(DJANGO_ROOT)
 
 
 # Quick-start development settings - unsuitable for production
@@ -179,7 +174,7 @@ STATICFILES_FINDERS = (
 )
 
 STATICFILES_DIRS = (
-    join(DJANGO_ROOT, 'static'),
+    join(PROJECT__ROOT, 'static'),
 )
 
 if os.path.exists('/Users/peter/'):
@@ -284,7 +279,7 @@ TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
 )
 
 TEMPLATE_DIRS = (
-    normpath(join(DJANGO_ROOT, 'templates')),
+    normpath(join(PROJECT_ROOT, 'templates')),
 )
 
 # Wagtail settings
