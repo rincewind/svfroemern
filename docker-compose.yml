@@ -1,5 +1,6 @@
 web:
   build: .
+  dockerfile: Docker.file
   links:
    - db:postgres
    - search:elasticsearch
