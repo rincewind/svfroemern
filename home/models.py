@@ -185,6 +185,8 @@ class NewsBoxBlock(blocks.StructBlock):
         icon = 'user'
 
 class ContentPage(Page, SidebarMixin, ContentMixin):
+    subpage_types = ['home.ContentPage', 'home.TeamIndexPage', 'home.NewsItemPage', 'home.EventPage']
+
     in_footer = models.CharField(max_length=20, choices=[('right', 'rechts',), ('left', 'links'), ('nope', 'nicht im Footer')], default='nope',
                                    verbose_name="Im Fuß anzeigen?", help_text="Soll diese Seite im Fuß-Bereich angezeigt werden?")
     class Meta:
@@ -193,6 +195,7 @@ class ContentPage(Page, SidebarMixin, ContentMixin):
     
 
 class HomePage(Page, SidebarMixin):    
+    subpage_types = ['home.ContentPage', 'home.TeamIndexPage', 'home.NewsItemPage', 'home.EventPage']
     
     main = StreamField([
         ('promo', blocks.ListBlock(blocks.StructBlock([
@@ -291,6 +294,8 @@ class PeopleBoxBlock(blocks.ListBlock):
         icon = 'user'
 
 class TeamPage(Page, SidebarMixin):
+    subpage_types = ['home.ContentPage', 'home.NewsItemPage', 'home.EventPage']
+
     short_title = models.CharField("Kurzname", max_length=16, null=False, blank=True, help_text="Kurzname der Mannschaft z.B. 'A' bei der A-Jugend")
 
     image = models.ForeignKey(BetterImage, on_delete=models.SET_NULL, related_name='+', blank=True, null=True, help_text='Mannschaftsbild')
@@ -304,10 +309,14 @@ class TeamPage(Page, SidebarMixin):
     ],null=True,blank=True)
 
 class EventPage(Page, SidebarMixin, ContentMixin):
+    subpage_types = []
+
     start = models.DateTimeField()
     end = models.DateTimeField(blank=True, null=True)
         
 class NewsItemPage(Page, SidebarMixin, ContentMixin):
+    subpage_types = []
+
     teaser_text = models.TextField()
     image = models.ForeignKey(BetterImage, on_delete=models.SET_NULL, related_name='+', blank=True, null=True, help_text='Bild zur Neuigkeit (sieht immer besser aus, wenn eins dabei ist)')
 

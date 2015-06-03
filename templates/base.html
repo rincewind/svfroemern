@@ -2,7 +2,7 @@
 {% extends "basic_base.html" %}
 
 {% load compress static wagtailuserbar home_tags %}
-
+{% block title %}{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}{% endblock %}{% block title_suffix %}{% endblock %}
 
 
 {% block body %}
@@ -53,7 +53,7 @@
 
 	<!-- - same height as fixed header -->
 	<div class="p1 "><div class="p1" style="height: 60px; border: 1px solid transparent"></div></div>
-{% block title %}{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}{% endblock %}{% block title_suffix %}{% endblock %}
+
 {% block extra_head %}
 {% endblock %}
 
