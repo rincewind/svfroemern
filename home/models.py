@@ -185,7 +185,7 @@ class NewsBoxBlock(blocks.StructBlock):
         icon = 'user'
 
 class ContentPage(Page, SidebarMixin, ContentMixin):
-    subpage_types = ['home.ContentPage', 'home.TeamIndexPage', 'home.NewsItemPage', 'home.EventPage']
+    subpage_types = ['home.ContentPage', 'home.TeamIndex', 'home.NewsItemPage', 'home.EventPage']
 
     in_footer = models.CharField(max_length=20, choices=[('right', 'rechts',), ('left', 'links'), ('nope', 'nicht im Footer')], default='nope',
                                    verbose_name="Im Fuß anzeigen?", help_text="Soll diese Seite im Fuß-Bereich angezeigt werden?")
@@ -195,7 +195,7 @@ class ContentPage(Page, SidebarMixin, ContentMixin):
     
 
 class HomePage(Page, SidebarMixin):    
-    subpage_types = ['home.ContentPage', 'home.TeamIndexPage', 'home.NewsItemPage', 'home.EventPage']
+    subpage_types = ['home.ContentPage', 'home.TeamIndex', 'home.NewsItemPage', 'home.EventPage']
     
     main = StreamField([
         ('promo', blocks.ListBlock(blocks.StructBlock([
