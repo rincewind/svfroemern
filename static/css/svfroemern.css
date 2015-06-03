@@ -1177,4 +1177,12 @@ background-color: black;
 color: white;
 }
 
+.text-shadow-2 {
+    text-shadow: 2px 2px 2px #444;
+}
+
+.richtext-image.full-width {
+    height: auto;
+}
+
 

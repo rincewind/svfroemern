@@ -1,0 +1,22 @@
+
+{% extends "base.html" %}
+
+{% load static core_tags wagtailcore_tags wagtailimages_tags i18n %}
+
+{% block body_class %}login{% endblock %}
+
+{% block body %}
+<div id="login">
+  <div id="login-box">
+  <header>
+    <img src="{% static 'img/logo.png' %}" alt="Logo des SV SW Frömern e.V." class="logo">
+  </header>
+  <main>
+    <p class="message">Eine E-Mail mit dem Login-Link wurde verschickt.</p>
+  </main>
+</div>
+</div>
+
+
+
+{% endblock %}

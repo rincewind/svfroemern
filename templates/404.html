@@ -1,9 +1,28 @@
-{% extends "base.html" %}
+{% load compress static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>404: Seite nicht gefunden</title>
+	<style>
+	  body { background-color: #ed7f2d; color: white; font-family: sans-serif;}
+	</style>
+    </head>
+    <body>
+      <div class="outer 404">
+	<div class="main" style="text-align:center;">
+	  <h1 >Daneben!</h1>
+	  <img src="http://i.giphy.com/qguepK11SCYQE.gif" alt="Animated gif of a missed goal">
 
-{% block body_class %}template-404{% endblock %}
 
-{% block content %}
-    <h1>Page not found</h1>
+	  <h2>Seite nicht gefunden</h2>
+	  <p><small>404 NOT FOUND</small></p>
 
-    <h2>Sorry, this page could not be found.</h2>
-{% endblock %}
+	  <a href="/"><img src="{% static 'img/logo500.png' %}" width="100px" alt="Logo des SV SW Frömern e.V."></a>
+
+	</div>
+      </div>
+    </body>
+</html>
+

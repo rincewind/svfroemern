@@ -1,9 +1,28 @@
 {% extends "home/page_with_sidebar.html" %}
 
-{% load static home_tags %}
+{% load static home_tags wagtailimages_tags %}
+
+
+{% block extra_head %}
+
+{% menu self as teams %}
+	<nav class=" container team-nav bg-darken-4  mb2 mt2 ">
+	  <!-- div class="full-width m0 center bg-darken-2 white bold h1">Jugend</div -->
+	  <div class="full-width table ">
+	    {% for page,selected in teams %}
+	    <a href="{{page.url}}" class="vmiddle team-nav-item table-cell   button button-transparent center py2 h2  white {% if selected %} bg-darken-3 {% endif %}"
+	       >{{page.specific.short_title}}</a>{% endfor %}
+	  </div>
+	</nav>
+{% endblock %}
 
 
 {% block left_content %}
+
+{% if self.image %}
+	<h2 class="h2 bg-gray white m0 p1 ghostly">{{self.title}}</h2>
+{% image self.image max-700x400 class="auto-height mb2 full-width" %}
+{% endif %}
 
 
 {% for block in self.content %}

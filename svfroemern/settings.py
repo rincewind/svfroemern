@@ -103,10 +103,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+#    'overextends',
     'compressor',
     'taggit',
     'modelcluster',
+    'nopassword',
 
     'wagtail.wagtailcore',
     'wagtail.wagtailadmin',

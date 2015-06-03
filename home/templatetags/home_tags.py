@@ -3,7 +3,7 @@ import datetime
 
 from django import template
 from django.utils import timezone
-from home.models import NewsItemPage, EventPage, TeamPage, Game, TeamGame
+from home.models import NewsItemPage, EventPage, TeamPage, Game, TeamGame, ContentPage, HomePage
 
 register = template.Library()
 
@@ -94,4 +94,38 @@ def gameresults():
     
     
     
+
+
+@register.assignment_tag
+def footer(position):
+    yield from ContentPage.objects.live().filter(in_footer=position).all()
+
+
+@register.assignment_tag(takes_context=True)
+def menu(context, base_page=None):
+
+    current_page = context.get('self')
+    current_ancestors = current_page.get_ancestors(True) if current_page is not None else []
+    logger.debug("menu for %s at %s (%s)", base_page, current_page, current_ancestors)
+
+    if base_page is None:
+        base_page = HomePage.objects.live().filter(show_in_menus=True).first()
+    else:
+        has_menu_descendants = base_page.get_descendants().filter(show_in_menus=True).exists()
+        logger.debug('base_page descendants? %s', has_menu_descendants)
+        if not has_menu_descendants:
+            base_page = base_page.get_parent()
+            logger.debug('new base_page: %s', base_page)
+        
+    if base_page is None:
+        return []
+
+    for page in base_page.get_children().live().filter(show_in_menus=True):
+        logger.debug(' -> %s', page)
+        if page in current_ancestors:
+            yield page, True
+        else:
+            yield page, False
+    
+
 

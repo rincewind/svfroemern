@@ -1,4 +1,4 @@
-{% load compress static wagtailuserbar %}
+{% load compress static wagtailuserbar home_tags %}
 
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -40,23 +40,24 @@
 
 		<div class="container">
 
-		<div class="full-width table">
-			<div class="table-cell vmiddle white py1 button button-transparent ">				
-			<img src="{% static 'img/logo500.png' %}" height="60px" class="p1  left">
+		<div class="full-width md-flex flex-justify flex-stretch">
+			<a class="vmiddle white py1 block button button-transparent flex-none " href="/">
+			<img src="{% static 'img/logo500.png' %}" height="60px" class="p1">
+			</a>
 
-			</div>
-
-			<div  class="table-cell  white  vmiddle button center button-transparent py1 h3">Verein</div>
-			<div class="selected bg-darken-3 white table-cell vmiddle button center button-transparent py1 h3">Senioren</div>
-			<div class="table-cell vmiddle white button center button-transparent py1 h3">Jugend</div>
-			<div class="table-cell vmiddle white button center button-transparent py1 h3">Bratwurst</div>
+			{% menu as items %}
+			{% for page, selected in items %}
+			<a  class="{% if selected %} selected bg-darken-3 {% endif %}  flex-auto  white  vmiddle button center button-transparent py3 h3"  href="{{page.url}}"> {{page.title}}</a>
+			{% endfor %}
 
 			<!-- - >div class="table-cell vmiddle">
 			<span class="h2 p1 vmiddle">SV Frömern 1928</span>
 			</div -->
-			<div class="table-cell vmiddle" >
-				<a class=" button button-transparent py1 h2 right lg-hide" id="menu-toggle"><i class="fa fa-bars"></i></a>
-			</div>
+
+			<!-- div class=" vmiddle" 
+				<!-- a class=" button button-transparent py1 h2 right lg-hide" id="menu-toggle"><i class="fa fa-bars"></i></a -->
+			<!-- /div -->
+
 		<!--nav class="container bg-darken- clearfix" style="display:none;" id="menu-items">
 				<a class="block fit button py2 button-transparent">Verein</a>
 				<a class="block ftt button py2 button-transparent">Mannschaften</a>
@@ -71,18 +72,8 @@
 	<!-- - same height as fixed header -->
 	<div class="p1 "><div class="p1" style="height: 60px; border: 1px solid transparent"></div></div>
 
-	<nav class=" container team-nav bg-darken-4  mb2 mt2 ">
-	  <!-- div class="full-width m0 center bg-darken-2 white bold h1">Jugend</div -->
-	  <div class="full-width table ">
-	    <a href="#" class="vmiddle team-nav-item table-cell   button button-transparent center py2 h2  white "
-	       >A</a><a class="vmiddle team-nav-item table-cell button button-transparent py2  h2 center  white "
-	       >B</a><a href="#" class="team-nav-item button-transparent button active table-cell py2 h2 center bg-darken-3 white "
-               >C</a><a href="#" class="team-nav-item button-transparent button table-cell h2 py2 center   white"
-               >D</a><a href="#" class="team-nav-item button-transparent button table-cell py2 h2 center  white "
-               >E</a
-               ><a href="#" class="table-cell  h2  team-nav-item button py2 button-transparent white center">F</a>
-	  </div>
-	</nav>
+{% block extra_head %}
+{% endblock %}
 
 	<main class="container mxn1 mt5  z2 clearfix">
         {% block content %}
@@ -95,25 +86,35 @@
 	</main>
 
 
+{% block footer %}
+	<footer class="bg-black white full-width  clearfix mt3">
+			  {% footer "left" as footer_left %}
+			  {% footer "right" as footer_right %}
 
-	<footer class="bg-black white full-width  clearfix">
 		<div class="container p3 caps h6">
 			<div class="sm-col sm-col-5 center">
-				Impressum<br/>
-				Kontakt<br/>
-				Hauptverein<br/>
+			  {% for page in footer_left %}
+			  <a href="{{page.url}}">{{page.title}}</a><br/>
+			  {% empty %}
+			  &nbsp; <br/>
+			  {% endfor %}
+
 			</div>
 			<div class="sm-col sm-col-2 center">
 			<img src="{% static 'img/logo500.png' %}" height="60px" class="p1">
 			</div>
 			<div class="sm-col sm-col-5 center">
-				Sponsoren<br/>
-				Ausserdem<br/>
+			  {% for page in footer_left %}
+			  <a href="{{page.url}}">{{page.title}}</a><br/>
+			  {% empty %}
+			  &nbsp; <br/>
+
+			  {% endfor %}
 			</div>
 
 		</div>
 	</footer>
-
+{% endblock %}
 
 
 

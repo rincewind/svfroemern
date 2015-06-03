@@ -1,0 +1,17 @@
+
+
+Zum Anmelden einfach diesen Link klicken oder in die URL-Zeile des Browser kopieren:
+
+{{ url }}
+
+
+-- 
+webmaster@FIXME
+
+SV SW Frömern e.V.
+
+
+
+
+
+

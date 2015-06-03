@@ -143,6 +143,7 @@ class SidebarMixin(models.Model):
     sidebar_inherit = models.BooleanField(default=True, null=False, verbose_name="Boxengasse übernhemen",
                                           help_text="Ist dieser Haken gesetzt, wird die Boxengasse der übergeordneten Seite übernommen. Das folgende Feld hat dann keine Bedeutung.")
     sidebar = StreamField([
+            ('toc', PlaceholderBlock('Navigation', label="Navigation-Kiste")),
             ('events', blocks.StructBlock([('past_cutoff', NumberBlock(help_text='Wieviele Tage in die Vergangenheit soll die Event-Box schauen', label='Von (Tage)')),
                                            ('future_cutoff', NumberBlock(help_text='Wieviele Tage in die Zukunft soll die Event-Box schauen', label='Bis (Tage)')),],
                                       label="Event-Box")),
@@ -264,7 +265,9 @@ class TeamGame(Game, Orderable):
 
 class TeamIndex(Page, SidebarMixin):
     subpage_types = ['home.TeamPage']
-    pass
+    @property
+    def teams(self):
+        yield from TeamPage.objects.live().descendant_of(self)
 
 from django.utils.html import format_html
 
@@ -289,6 +292,9 @@ class PeopleBoxBlock(blocks.ListBlock):
 
 class TeamPage(Page, SidebarMixin):
     short_title = models.CharField("Kurzname", max_length=16, null=False, blank=True, help_text="Kurzname der Mannschaft z.B. 'A' bei der A-Jugend")
+
+    image = models.ForeignKey(BetterImage, on_delete=models.SET_NULL, related_name='+', blank=True, null=True, help_text='Mannschaftsbild')
+
     #dfbnet = URLField()   
     content = StreamField([
         ('people', PeopleBoxBlock(label="Leute-Kiste")),
@@ -350,11 +356,12 @@ EventPage.content_panels = [
 TeamPage.content_panels = [
     FieldPanel('title', classname='full title'),
     FieldPanel('short_title', classname='full'),
+    ImageChooserPanel('image'),
     StreamFieldPanel('content'),
     InlinePanel('games', panels=TeamGame.panels, label="Spiele"),
 ]
 
-for page in HomePage, TeamPage, EventPage, NewsItemPage:
+for page in HomePage, TeamPage, EventPage, NewsItemPage, ContentPage:
     page.edit_handler = TabbedInterface([
         ObjectList(page.content_panels, heading='Inhalt'),    
         ObjectList(page.sidebar_panels, heading='Boxengasse'),

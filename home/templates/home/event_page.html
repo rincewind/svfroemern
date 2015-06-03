@@ -1,0 +1,15 @@
+{% extends "home/page_with_sidebar.html" %}
+
+
+{% load static home_tags wagtailcore_tags %}
+
+{% block left_content %}
+<h2 class="h2 bg-gray white m0 p1 ghostly">{{self.title}}</h2>
+<main class="p1 bg-white mb2 black ghostly">
+<div class="h1 center p1 mb2">{{self.start|date:"D, d.m.Y" }}{% if self.end %} bis {{self.end|date:"D, d.m.Y" }}{% endif %}</div>
+
+{{ self.content | richtext }}
+
+</main>
+
+{% endblock %}

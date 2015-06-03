@@ -1,0 +1,28 @@
+
+{% extends "base.html" %}
+
+{% load static core_tags wagtailcore_tags wagtailimages_tags i18n %}
+
+{% block body_class %}login{% endblock %}
+{% block extra_body_attributes%}onload="document.getElementById('loginthing').submit();"{% endblock %}
+{% block body %}
+<div id="login">
+  <div id="login-box">
+  <header>
+    <img src="{% static 'img/logo.png' %}" alt="Logo des SV SW Frömern e.V." class="logo">
+  </header>
+  <main>
+    <p class="message">Anmeldung läuft...</p>
+    <form action="." method="POST" id='loginthing'>
+    {% csrf_token %}
+    <noscript>
+      <input type="submit" value="Jetzt anmelden!">
+    </noscript>
+  </form>
+  </main>
+</div>
+</div>
+
+
+
+{% endblock %}

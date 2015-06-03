@@ -1,0 +1,23 @@
+{% load home_tags %}
+{% load wagtailimages_tags %}
+
+
+{% menu self as items %}
+
+{% if items %}
+			<h2 class="h2 bg-gray white m0 p1 ghostly">Inhalt</h2>
+
+
+
+			<nav class="p1 bg-silver black ghostly">
+			{% for page, selected in items %}
+			<a class="button h4  black full-width center {% if selected %} bg-white {% else %} bg-silver {% endif %}" href="{{page.url}}">{{page.title}}</a>
+			{% endfor %}
+</nav>
+
+{% endif %}
+
+
+
+
+

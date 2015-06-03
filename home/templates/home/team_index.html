@@ -1,0 +1,30 @@
+{% extends "home/page_with_sidebar.html" %}
+
+
+{% load static home_tags wagtailcore_tags wagtailimages_tags %}
+
+{% block left_content %}
+<h2 class="h2 bg-gray white m0 p1 ghostly">{{self.title}}</h2>
+<main class="p1 bg-white mb2 black ghostly clearfix">
+  {% for page in self.teams %}
+  <div class="md-col md-col-6 relative px2">
+	  {% if page.image %}
+    {% image page.image max-440x330 class="auto-height block rounded " %}
+	  {% else %}
+	  <img src="http://placecorgi.com/440/330" />
+	  {% endif %}
+    <a href="{{page.url}}" class="block top-0 left-0 p2  absolute full-width ">
+    <div class="full-width  white full-width center mxn2 text-shadow-2  bg-darken-3 py3">
+      <h1>{{page.title}}</h1>      
+    </div>
+    </a>
+    </div>
+
+  </div>
+
+{% endfor %}
+
+
+</main>
+
+{% endblock %}

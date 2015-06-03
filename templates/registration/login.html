@@ -1,0 +1,31 @@
+
+{% extends "base.html" %}
+
+{% load static core_tags wagtailcore_tags wagtailimages_tags i18n %}
+
+{% block body_class %}login{% endblock %}
+
+{% block body %}
+<div id="login">
+  <div id="login-box">
+  <header>
+    <img src="{% static 'img/logo.png' %}" alt="Logo des SV SW Frömern" class="logo">
+  </header>
+  <main>
+<form method="post" class="form-vertical">
+    {% csrf_token %}
+    {{ form.media }}
+    <div class="control-group row-fluid">
+        <input id="id_username" maxlength="30" name="username" placeholder="E-Mail Adresse" type="text" style="text-align: center;" class="span12">
+    </div>
+    <div class="controls">
+        <button type="submit" class="btn">Anmelden</button>
+    </div>
+</form>
+  </main>
+</div>
+</div>
+
+
+
+{% endblock %}
