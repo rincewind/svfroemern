@@ -144,17 +144,17 @@ class SidebarMixin(models.Model):
                                           help_text="Ist dieser Haken gesetzt, wird die Boxengasse der übergeordneten Seite übernommen. Das folgende Feld hat dann keine Bedeutung.")
     sidebar = StreamField([
             ('toc', PlaceholderBlock('Navigation', label="Navigation-Kiste")),
-            ('events', blocks.StructBlock([('past_cutoff', NumberBlock(help_text='Wieviele Tage in die Vergangenheit soll die Event-Box schauen', label='Von (Tage)')),
-                                           ('future_cutoff', NumberBlock(help_text='Wieviele Tage in die Zukunft soll die Event-Box schauen', label='Bis (Tage)')),],
+            ('events', blocks.StructBlock([('past_cutoff', NumberBlock(help_text='Wieviele Tage in die Vergangenheit soll die Event-Box schauen', label='Von (Tage)', default=5)),
+                                           ('future_cutoff', NumberBlock(help_text='Wieviele Tage in die Zukunft soll die Event-Box schauen', label='Bis (Tage)', default=60)),],
                                       label="Event-Box")),
             ('game_schedule', PlaceholderBlock('Nächste-Spiele-Box')),
             ('game_results', PlaceholderBlock('Spielergebnisse-Box')),
             ('contact', blocks.StructBlock([            
-                ('person_image', ImageChooserBlock(label="Bild")),
-                ('person_role', blocks.CharBlock(label="Rolle")),
+                ('person_image', ImageChooserBlock(label="Bild", blank=True, null=True)),
+                ('person_role', blocks.CharBlock(label="Rolle", blank=True)),
                 ('person_name', blocks.CharBlock(label="Name")),
-                ('person_line1', blocks.CharBlock(label="Zeile 1")),
-                ('person_line2', blocks.CharBlock(label="Zeile 2")),
+                ('person_line1', blocks.CharBlock(label="Zeile 1", blank=True)),
+                ('person_line2', blocks.CharBlock(label="Zeile 2", blank=True)),
             ], label="Kontakt-Box")),
         ],null=True,blank=True)
     
@@ -176,9 +176,9 @@ class ContentMixin(models.Model):
 class NewsBoxBlock(blocks.StructBlock):
     logger = logging.getLogger(__name__)
     news_count = NumberBlock(label="Wieviele News?",
-                             help_text="Diese Zahl bestimmt, wieviele News-Einträge die News-Kiste anzeigt")
+                             help_text="Diese Zahl bestimmt, wieviele News-Einträge die News-Kiste anzeigt", default=12)
 
-    base_page = blocks.PageChooserBlock(label="Zu welcher Seite?", help_text="Es werden nur Meldungen angezeigt, die unterhalb dieser Seite im Seitenbaum hängen.", blank=True)
+    base_page = blocks.PageChooserBlock(label="Zu welcher Seite?", help_text="Es werden nur Meldungen angezeigt, die unterhalb dieser Seite im Seitenbaum hängen.", blank=True, null=True)
 
     class Meta:
         template = 'blocks/newsbox.html'
@@ -199,7 +199,7 @@ class HomePage(Page, SidebarMixin):
     
     main = StreamField([
         ('promo', blocks.ListBlock(blocks.StructBlock([
-            ('text', blocks.TextBlock(label="Promo-Text", help_text="Dieser Text wird über dem Bild angezeigt")),
+            ('text', blocks.TextBlock(label="Promo-Text", help_text="Dieser Text wird über dem Bild angezeigt", blank=True)),
             ('image', ImageChooserBlock(label="Promo-Bild", help_text="Dieses Bild wird groß angezeigt"),),
             ('page', blocks.PageChooserBlock(label="Seite", help_text="Seite, welche promoted werden soll"),),
         ], label="Promos"), template='blocks/promobox.html')),        
@@ -281,11 +281,11 @@ class PeopleBoxBlock(blocks.ListBlock):
     logger = logging.getLogger(__name__)
     def __init__(self, **kwargs):
         super().__init__(blocks.StructBlock([
-            ('person_image', ImageChooserBlock()),
-            ('person_role', blocks.CharBlock(max_length=255)),
+            ('person_image', ImageChooserBlock(blank=True, null=True)),
+            ('person_role', blocks.CharBlock(max_length=255, blank=True)),
             ('person_name', blocks.CharBlock(max_length=255)),
-            ('person_line1', blocks.CharBlock(max_length=255)),
-            ('person_line2', blocks.CharBlock(max_length=255)),
+            ('person_line1', blocks.CharBlock(max_length=255, blank=True)),
+            ('person_line2', blocks.CharBlock(max_length=255, blank=True)),
         ], ), **kwargs)
 
     
