@@ -3,6 +3,7 @@
 *.swp
 /.venv/
 /static_root/
+/static/node_modules/
 /media/
 /.vagrant/
 /Vagrantfile.local
