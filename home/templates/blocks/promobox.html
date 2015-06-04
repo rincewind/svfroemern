@@ -1,0 +1,15 @@
+{% load static home_tags wagtailimages_tags %}
+
+{% for promo in self %}
+<a class="mb1 relative block" href="{{ promo.page.url }}">
+	{% image promo.image max-800x600 class="auto-height border border-silver" %}
+	<div class="absolute bottom-0 bg-darken-3 full-width center white text-shadow-2 ">
+
+		<p class="h1 bold">{{ promo.text }}
+		</p>
+	</div>
+</a>
+
+
+
+{% endfor %}

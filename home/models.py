@@ -202,7 +202,7 @@ class HomePage(Page, SidebarMixin):
             ('text', blocks.TextBlock(label="Promo-Text", help_text="Dieser Text wird über dem Bild angezeigt")),
             ('image', ImageChooserBlock(label="Promo-Bild", help_text="Dieses Bild wird groß angezeigt"),),
             ('page', blocks.PageChooserBlock(label="Seite", help_text="Seite, welche promoted werden soll"),),
-        ], label="Promos"))),        
+        ], label="Promos"), template='blocks/promobox.html')),        
         ('text', blocks.RichTextBlock()),
         ('news', NewsBoxBlock(label="News-Kiste")),
         ],blank=True)
