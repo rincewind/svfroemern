@@ -1,0 +1,21 @@
+{% extends "home/page_with_sidebar.html" %}
+
+
+{% load static home_tags wagtailcore_tags wagtailimages_tags %}
+
+{% block left_content %}
+<h2 class="h2 bg-gray white m0 p1 ghostly">{{self.title}}</h2>
+<main class="p1 bg-white mb2 black ghostly container">
+  <header class="bold black">
+{% if self.image %}
+{% image self.image max-450x330 class="md-col md-col-5 auto-height mr2" %}
+{% endif %}
+<div class=" ">{{ self.teaser_text }}</div></header>
+{% if self.content %}
+<div class="mt2 clearfix">
+  <span class="gray h5">{{self.effective_date|date:"d.m.Y"}}</span> {{ self.content | richtext }}
+</div>
+{% endif %}
+</main>
+
+{% endblock %}
