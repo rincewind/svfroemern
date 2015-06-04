@@ -28,8 +28,10 @@
 			<h2 class="h2 p1 white bg-gray m0">Termine</h2>
 			<div class="p1 bg-silver black  ghostly">
 			  {% for event in items %}
+			  <a class="block" href="{{event.url}}">
 				<h3 class="h4 m0">{{event.start|date:"d.m.Y"}}{% if event.end %} -&nbsp;{{event.end|date:"d.m.Y" }}{% endif %}</h3>
 				<p>{{event.title}}</p>
+			  </a>
 {% empty %}
 <h2 class="h4 m0 p2">In den nächsten {{block.value.future_cutoff}} Tagen ist nichts geplant!</h2>
 {% endfor %}
